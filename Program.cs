@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 //must reference MVPSI.JAMS to access the SDK.  
 //Be sure to reference JAMSShr in project references
 using MVPSI.JAMS;
@@ -47,6 +47,7 @@ namespace JAMSSubmitJobSample
             }
             try
             {
+                // Try to create/update the job that we just defined on our specified server
                 sampleJob.Update(server);
             }
             catch (JAMSException jex)
@@ -54,6 +55,24 @@ namespace JAMSSubmitJobSample
                 Console.WriteLine(jex);
                 Console.Read();
             }
+
+            //
+            // If the job has been created without any exceptions
+            // we can go ahead and try to submit the job with a value for the parameter we created
+            //
+            Submit.Info si;
+            try
+            {
+                Submit.Load(out si, "TestJob123", server, Submit.Type.Job);
+                si.Parameters["Name_Input"].ParamValue = "SampleName";
+                si.Submit();
+            }
+            catch (JAMSException jex)
+            {
+                Console.WriteLine(jex);
+                Console.Read();
+            }   
+            
         }
     }
 }
